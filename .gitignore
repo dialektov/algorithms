@@ -172,3 +172,25 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# C++ ignore rules
+# Скомпилированные объектные файлы
+*.o
+*.ko
+*.obj
+*.exe
+*.out
+
+# Промежуточные файлы
+*.d
+*.ilk
+*.meta
+
+# Директории сборки
+build/
+Debug/
+Release/
+x64/
+*.sln
+*.vcxproj
+*.filters
