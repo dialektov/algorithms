@@ -1,75 +1,55 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
-#include <iomanip>
+#include <algorithm>
+
 using namespace std;
 
-const int MAXN = 1205;
-vector<int> g[MAXN];
-int color[MAXN];
-bool used[MAXN];
-pair<int, int> a[MAXN];
+vector<vector<int>> adj;
+vector<bool> visited;
+vector<int> result;
+bool cycle = false;
+vector<char> color;
 
-bool dfs(int v, int c) {
-    used[v] = true;
-    color[v] = c;
-    for (int to : g[v]) {
-        if (!used[to]) {
-            if (!dfs(to, 1 - c)) {
-                return false;
-            }
-        } else if (color[to] == color[v]) {
-            return false;
+void dfs(int v) {
+    color[v] = 'g';
+    for (int u : adj[v]) {
+        if (color[u] == 'w') {
+            dfs(u);
+        } else if (color[u] == 'g') {
+            cycle = true;
         }
     }
-    return true;
-}
-
-bool check(double mid, int n) {
-    for (int i = 0; i < n; ++i) {
-        g[i].clear();
-        used[i] = false;
-    }
-    for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {
-            if (hypot(a[i].first - a[j].first, a[i].second - a[j].second) < mid) {
-                g[i].push_back(j);
-                g[j].push_back(i);
-            }
-        }
-    }
-    for (int i = 0; i < n; ++i) {
-        if (!used[i] && !dfs(i, 0)) {
-            return false;
-        }
-    }
-    return true;
+    color[v] = 'b';
+    result.push_back(v);
 }
 
 int main() {
+    int n, m;
+    cin >> n >> m;
+    adj.resize(n + 1);
+    visited.resize(n + 1);
+    color.assign(n + 1, 'w');
 
-    int n;
-    cin >> n;
-    for (int i = 0; i < n; ++i) {
-        cin >> a[i].first >> a[i].second;
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
     }
 
-    double l = 0, r = 1e9;
-    for (int it = 0; it < 100; ++it) {
-        double mid = (l + r) / 2;
-        if (check(mid, n)) {
-            l = mid;
-        } else {
-            r = mid;
+    for (int i = 1; i <= n; i++) {
+        if (color[i] == 'w') {
+            dfs(i);
         }
     }
 
-    check(l, n);
-    cout << fixed << setprecision(15) << l/2 << "\n";
-    for (int i = 0; i < n; ++i) {
-        cout << color[i] + 1 << " ";
+    if (cycle) {
+        cout << -1;
+    } else {
+        reverse(result.begin(), result.end());
+        for (int v : result) {
+            cout << v << " ";
+        }
     }
-    cout << "\n";
 
     return 0;
 }
