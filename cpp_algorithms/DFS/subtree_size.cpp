@@ -1,34 +1,37 @@
 #include <iostream>
+#include <vector>
+
 using namespace std;
 
-int n, x, y, area;
-char maze[12][12];
-bool visited[12][12];
-int dx[4] = {-1, 0, 1, 0};
-int dy[4] = {0, 1, 0, -1};
+vector<int> tree[100001];
+int subtreeSize[100001];
 
-void dfs(int x, int y){
-    visited[x][y] = true;
-    area++;
-    for(int i = 0; i < 4; i++){
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-        if(nx >= 0 && nx < n && ny >= 0 && ny < n && !visited[nx][ny] && maze[nx][ny] == '.'){
-            dfs(nx, ny);
+void dfs(int node, int parent) {
+    subtreeSize[node] = 1;
+    for (int child : tree[node]) {
+        if (child != parent) {
+            dfs(child, node);
+            subtreeSize[node] += subtreeSize[child];
         }
     }
 }
 
-int main(){
-    cin >> n;
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            cin >> maze[i][j];
-        }
+int main() {
+    int V;
+    cin >> V;
+
+    for (int i = 0; i < V - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
     }
-    cin >> x >> y;
-    x--; y--;
-    dfs(x, y);
-    cout << area;
+
+    dfs(1, -1);
+
+    for (int i = 1; i <= V; i++) {
+        cout << subtreeSize[i] << " ";
+    }
+
     return 0;
 }

@@ -16,14 +16,12 @@ std::vector<std::vector<size_t>> adj_list(size_t v, size_t e) {
     return list;
 }
 
-void dfs(size_t now, std::vector<std::vector<size_t>>& graph, std::vector<bool>& visited, std::vector<int>& colors, std::string& answer) {
+void dfs(size_t now, std::vector<std::vector<size_t>>& graph, std::vector<bool>& visited, std::vector<std::vector<size_t>>& answer) {
     visited[now] = true;
+    answer[answer.size()-1].push_back(now);
     for (size_t neig : graph[now]) {
         if (!visited[neig]) {
-            colors[neig] = -colors[now];
-            dfs(neig, graph, visited, colors, answer);
-        } else if (colors[neig] == colors[now]) {
-            answer = "NO";
+            dfs(neig, graph, visited, answer);
         }
     }
 }
@@ -34,18 +32,22 @@ int main() {
     std::cin >> v >> e;
     std::vector<std::vector<size_t>> graph = adj_list(v, e);
     std::vector<bool> visited(v + 1, false);
-    std::vector<int> colors(v + 1, 0);
-    std::string answer = "YES";
+    std::vector<std::vector<size_t>> answer;
     for (size_t i = 1; i <= v; ++i) {
         if (!visited[i]) {
             size_t now = i;
-            colors[i] = 1;
-            dfs(now, graph, visited, colors, answer);
-            if (answer == "NO") {
-                break;
-            }
+            std::vector<size_t> comp;
+            answer.push_back(comp);
+            dfs(now, graph, visited, answer);
         }
     }
-    std::cout << answer;
+    std::cout << answer.size() << std::endl;
+    for (std::vector<size_t> i : answer) {
+        std::cout << i.size() << std::endl;
+        for (size_t j : i) {
+            std::cout << j << ' ';
+        }
+        std::cout << std::endl;
+    }
     return 0;
 }
