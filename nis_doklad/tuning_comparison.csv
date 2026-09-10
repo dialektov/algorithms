@@ -1,0 +1,6 @@
+dataset,xgb_default,xgb_tuned,mlp,tune_gain,family_gap_xgb_mlp,tune_ge_family_gap,best_params
+blood-transfusion,0.7141590086326929,0.7422173489278752,0.7557386521860205,0.028058340295182282,0.04157964355332766,False,"{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 100}"
+diabetes,0.8050293501048218,0.8297477288609365,0.8094088050314465,0.02471837875611471,0.004379454926624726,True,"{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 100}"
+credit-g,0.7824285714285713,0.7851904761904762,0.7926428571428571,0.0027619047619049653,0.010214285714285842,False,"{'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 100}"
+pc4,0.9460038442460317,0.945641121031746,0.8812152777777778,-0.000362723214285654,0.06478856646825393,False,"{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 300}"
+madelon,0.8537751479289941,0.8971538461538462,0.5934230769230769,0.043378698224852075,0.2603520710059172,False,"{'model__learning_rate': 0.05, 'model__max_depth': 6, 'model__n_estimators': 300}"

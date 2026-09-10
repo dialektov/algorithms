@@ -1,0 +1,450 @@
+{
+  "n_datasets_ok": 5,
+  "errors": [],
+  "meta": [
+    {
+      "dataset": "blood-transfusion",
+      "openml_name": "blood-transfusion-service-center",
+      "n": 748,
+      "d": 4,
+      "n_classes": 2,
+      "irregularity_skew": 2.2631111929251677,
+      "scoring": "roc_auc",
+      "note": "мало признаков, относительно простой"
+    },
+    {
+      "dataset": "diabetes",
+      "openml_name": "diabetes",
+      "n": 768,
+      "d": 8,
+      "n_classes": 2,
+      "irregularity_skew": 1.0973935218896975,
+      "scoring": "roc_auc",
+      "note": "медицинский, умеренный размер"
+    },
+    {
+      "dataset": "credit-g",
+      "openml_name": "credit-g",
+      "n": 1000,
+      "d": 20,
+      "n_classes": 2,
+      "irregularity_skew": 1.1500699623872632,
+      "scoring": "roc_auc",
+      "note": "много категориальных, irregular-ish"
+    },
+    {
+      "dataset": "pc4",
+      "openml_name": "pc4",
+      "n": 1458,
+      "d": 37,
+      "n_classes": 2,
+      "irregularity_skew": 6.475359567473694,
+      "scoring": "roc_auc",
+      "note": "software defect, дисбаланс"
+    },
+    {
+      "dataset": "madelon",
+      "openml_name": "madelon",
+      "n": 2600,
+      "d": 500,
+      "n_classes": 2,
+      "irregularity_skew": 0.051665955135509464,
+      "scoring": "roc_auc",
+      "note": "много шумовых признаков"
+    }
+  ],
+  "tune": [
+    {
+      "dataset": "blood-transfusion",
+      "xgb_default": 0.7141590086326929,
+      "xgb_tuned": 0.7422173489278752,
+      "mlp": 0.7557386521860205,
+      "tune_gain": 0.028058340295182282,
+      "family_gap_xgb_mlp": 0.04157964355332766,
+      "tune_ge_family_gap": false,
+      "best_params": "{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 100}"
+    },
+    {
+      "dataset": "diabetes",
+      "xgb_default": 0.8050293501048218,
+      "xgb_tuned": 0.8297477288609365,
+      "mlp": 0.8094088050314465,
+      "tune_gain": 0.02471837875611471,
+      "family_gap_xgb_mlp": 0.004379454926624726,
+      "tune_ge_family_gap": true,
+      "best_params": "{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 100}"
+    },
+    {
+      "dataset": "credit-g",
+      "xgb_default": 0.7824285714285713,
+      "xgb_tuned": 0.7851904761904762,
+      "mlp": 0.7926428571428571,
+      "tune_gain": 0.0027619047619049653,
+      "family_gap_xgb_mlp": 0.010214285714285842,
+      "tune_ge_family_gap": false,
+      "best_params": "{'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 100}"
+    },
+    {
+      "dataset": "pc4",
+      "xgb_default": 0.9460038442460317,
+      "xgb_tuned": 0.945641121031746,
+      "mlp": 0.8812152777777778,
+      "tune_gain": -0.000362723214285654,
+      "family_gap_xgb_mlp": 0.06478856646825393,
+      "tune_ge_family_gap": false,
+      "best_params": "{'model__learning_rate': 0.05, 'model__max_depth': 3, 'model__n_estimators': 300}"
+    },
+    {
+      "dataset": "madelon",
+      "xgb_default": 0.8537751479289941,
+      "xgb_tuned": 0.8971538461538462,
+      "mlp": 0.5934230769230769,
+      "tune_gain": 0.043378698224852075,
+      "family_gap_xgb_mlp": 0.2603520710059172,
+      "tune_ge_family_gap": false,
+      "best_params": "{'model__learning_rate': 0.05, 'model__max_depth': 6, 'model__n_estimators': 300}"
+    }
+  ],
+  "results_head": [
+    {
+      "model": "LogReg",
+      "mean": 0.7529003063213588,
+      "std": 0.029103589688212236,
+      "seconds": 0.061337947845458984,
+      "scores": [
+        0.7736354775828459,
+        0.7853313840155944,
+        0.7097953216374269,
+        0.768421052631579,
+        0.7273182957393483
+      ],
+      "dataset": "blood-transfusion",
+      "scoring": "roc_auc",
+      "irregularity_skew": 2.2631111929251677,
+      "family": "baseline"
+    },
+    {
+      "model": "RF",
+      "mean": 0.6819507101086048,
+      "std": 0.03705214368121528,
+      "seconds": 1.1220803260803223,
+      "scores": [
+        0.6549707602339181,
+        0.7346491228070176,
+        0.6856725146198831,
+        0.7053884711779449,
+        0.6290726817042607
+      ],
+      "dataset": "blood-transfusion",
+      "scoring": "roc_auc",
+      "irregularity_skew": 2.2631111929251677,
+      "family": "baseline"
+    },
+    {
+      "model": "MLP",
+      "mean": 0.7557386521860205,
+      "std": 0.02498010686523641,
+      "seconds": 0.28189849853515625,
+      "scores": [
+        0.7567007797270955,
+        0.7768031189083819,
+        0.7253898635477581,
+        0.7892230576441103,
+        0.7305764411027569
+      ],
+      "dataset": "blood-transfusion",
+      "scoring": "roc_auc",
+      "irregularity_skew": 2.2631111929251677,
+      "family": "NN"
+    },
+    {
+      "model": "XGBoost",
+      "mean": 0.7141590086326929,
+      "std": 0.030589032102200646,
+      "seconds": 0.2616462707519531,
+      "scores": [
+        0.7210038986354775,
+        0.7577972709551656,
+        0.7012670565302145,
+        0.7258145363408521,
+        0.6649122807017543
+      ],
+      "dataset": "blood-transfusion",
+      "scoring": "roc_auc",
+      "irregularity_skew": 2.2631111929251677,
+      "family": "GBDT"
+    },
+    {
+      "model": "LightGBM",
+      "mean": 0.6921205792258424,
+      "std": 0.03514784637700311,
+      "seconds": 0.20398950576782227,
+      "scores": [
+        0.7013888888888888,
+        0.7446393762183235,
+        0.674098440545809,
+        0.7022556390977445,
+        0.6382205513784461
+      ],
+      "dataset": "blood-transfusion",
+      "scoring": "roc_auc",
+      "irregularity_skew": 2.2631111929251677,
+      "family": "GBDT"
+    },
+    {
+      "model": "LogReg",
+      "mean": 0.8303878406708595,
+      "std": 0.02228758281308102,
+      "seconds": 0.04625725746154785,
+      "scores": [
+        0.8168518518518519,
+        0.8692592592592592,
+        0.8411111111111111,
+        0.8088679245283018,
+        0.8158490566037736
+      ],
+      "dataset": "diabetes",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.0973935218896975,
+      "family": "baseline"
+    },
+    {
+      "model": "RF",
+      "mean": 0.8250080363382251,
+      "std": 0.02188324839464462,
+      "seconds": 1.1104600429534912,
+      "scores": [
+        0.8528703703703704,
+        0.8448148148148149,
+        0.8251851851851852,
+        0.8074528301886792,
+        0.7947169811320755
+      ],
+      "dataset": "diabetes",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.0973935218896975,
+      "family": "baseline"
+    },
+    {
+      "model": "MLP",
+      "mean": 0.8094088050314465,
+      "std": 0.037421901809082704,
+      "seconds": 0.2673366069793701,
+      "scores": [
+        0.7690740740740741,
+        0.8716666666666667,
+        0.8059259259259259,
+        0.7745283018867923,
+        0.8258490566037735
+      ],
+      "dataset": "diabetes",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.0973935218896975,
+      "family": "NN"
+    },
+    {
+      "model": "XGBoost",
+      "mean": 0.8050293501048218,
+      "std": 0.028513266379509763,
+      "seconds": 0.31229376792907715,
+      "scores": [
+        0.8355555555555555,
+        0.83,
+        0.8016666666666666,
+        0.8028301886792453,
+        0.7550943396226415
+      ],
+      "dataset": "diabetes",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.0973935218896975,
+      "family": "GBDT"
+    },
+    {
+      "model": "LightGBM",
+      "mean": 0.7900698812019566,
+      "std": 0.02029299726683991,
+      "seconds": 0.279813289642334,
+      "scores": [
+        0.8033333333333333,
+        0.8175925925925925,
+        0.7905555555555557,
+        0.7811320754716982,
+        0.7577358490566037
+      ],
+      "dataset": "diabetes",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.0973935218896975,
+      "family": "GBDT"
+    },
+    {
+      "model": "LogReg",
+      "mean": 0.7861666666666667,
+      "std": 0.019770852822151953,
+      "seconds": 0.12163758277893066,
+      "scores": [
+        0.7745238095238095,
+        0.753095238095238,
+        0.7957142857142857,
+        0.8065476190476191,
+        0.800952380952381
+      ],
+      "dataset": "credit-g",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.1500699623872632,
+      "family": "baseline"
+    },
+    {
+      "model": "RF",
+      "mean": 0.7874285714285715,
+      "std": 0.01787603762270695,
+      "seconds": 1.210148572921753,
+      "scores": [
+        0.7922023809523809,
+        0.7614285714285713,
+        0.7800595238095238,
+        0.8164880952380951,
+        0.7869642857142858
+      ],
+      "dataset": "credit-g",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.1500699623872632,
+      "family": "baseline"
+    },
+    {
+      "model": "MLP",
+      "mean": 0.7926428571428571,
+      "std": 0.028669909640960875,
+      "seconds": 0.6039109230041504,
+      "scores": [
+        0.7780952380952382,
+        0.774047619047619,
+        0.8101190476190476,
+        0.84,
+        0.7609523809523809
+      ],
+      "dataset": "credit-g",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.1500699623872632,
+      "family": "NN"
+    },
+    {
+      "model": "XGBoost",
+      "mean": 0.7824285714285713,
+      "std": 0.020162688650213378,
+      "seconds": 0.3732783794403076,
+      "scores": [
+        0.7652380952380952,
+        0.7564285714285713,
+        0.7798809523809525,
+        0.8073809523809523,
+        0.8032142857142858
+      ],
+      "dataset": "credit-g",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.1500699623872632,
+      "family": "GBDT"
+    },
+    {
+      "model": "LightGBM",
+      "mean": 0.7824285714285714,
+      "std": 0.019103875258350656,
+      "seconds": 0.41489100456237793,
+      "scores": [
+        0.7526190476190476,
+        0.7702380952380953,
+        0.7888095238095238,
+        0.7927380952380952,
+        0.8077380952380954
+      ],
+      "dataset": "credit-g",
+      "scoring": "roc_auc",
+      "irregularity_skew": 1.1500699623872632,
+      "family": "GBDT"
+    },
+    {
+      "model": "LogReg",
+      "mean": 0.9045579117063491,
+      "std": 0.017082381148007555,
+      "seconds": 0.0698235034942627,
+      "scores": [
+        0.904296875,
+        0.9211154513888888,
+        0.912109375,
+        0.8720982142857142,
+        0.9131696428571429
+      ],
+      "dataset": "pc4",
+      "scoring": "roc_auc",
+      "irregularity_skew": 6.475359567473694,
+      "family": "baseline"
+    },
+    {
+      "model": "RF",
+      "mean": 0.9432152157738095,
+      "std": 0.009159171120444462,
+      "seconds": 1.36513090133667,
+      "scores": [
+        0.953125,
+        0.9467230902777778,
+        0.9476453993055556,
+        0.9423549107142857,
+        0.9262276785714285
+      ],
+      "dataset": "pc4",
+      "scoring": "roc_auc",
+      "irregularity_skew": 6.475359567473694,
+      "family": "baseline"
+    },
+    {
+      "model": "MLP",
+      "mean": 0.8812152777777778,
+      "std": 0.03215401510714995,
+      "seconds": 0.45508456230163574,
+      "scores": [
+        0.8350694444444444,
+        0.8960503472222222,
+        0.8960503472222222,
+        0.8543526785714285,
+        0.9245535714285714
+      ],
+      "dataset": "pc4",
+      "scoring": "roc_auc",
+      "irregularity_skew": 6.475359567473694,
+      "family": "NN"
+    },
+    {
+      "model": "XGBoost",
+      "mean": 0.9460038442460317,
+      "std": 0.00931901986203906,
+      "seconds": 0.4900336265563965,
+      "scores": [
+        0.9572482638888888,
+        0.9476996527777778,
+        0.9545355902777777,
+        0.9361607142857142,
+        0.934375
+      ],
+      "dataset": "pc4",
+      "scoring": "roc_auc",
+      "irregularity_skew": 6.475359567473694,
+      "family": "GBDT"
+    },
+    {
+      "model": "LightGBM",
+      "mean": 0.9456690228174602,
+      "std": 0.00625700197259625,
+      "seconds": 0.6120173931121826,
+      "scores": [
+        0.9556206597222222,
+        0.9484592013888888,
+        0.9436848958333333,
+        0.9366071428571427,
+        0.9439732142857142
+      ],
+      "dataset": "pc4",
+      "scoring": "roc_auc",
+      "irregularity_skew": 6.475359567473694,
+      "family": "GBDT"
+    }
+  ]
+}

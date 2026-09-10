@@ -1,0 +1,6 @@
+dataset,openml_name,n,d,n_classes,irregularity_skew,scoring,note
+blood-transfusion,blood-transfusion-service-center,748,4,2,2.2631111929251677,roc_auc,"мало признаков, относительно простой"
+diabetes,diabetes,768,8,2,1.0973935218896975,roc_auc,"медицинский, умеренный размер"
+credit-g,credit-g,1000,20,2,1.1500699623872632,roc_auc,"много категориальных, irregular-ish"
+pc4,pc4,1458,37,2,6.475359567473694,roc_auc,"software defect, дисбаланс"
+madelon,madelon,2600,500,2,0.051665955135509464,roc_auc,много шумовых признаков

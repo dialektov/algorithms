@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>When Do Neural Nets Outperform Boosted Trees on Tabular Data?</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent2: #34d399;
+      --warn: #fbbf24;
+      --line: #334155;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+    }
+    .deck { height: 100%; overflow: hidden; position: relative; }
+    .slide {
+      display: none;
+      height: 100%;
+      padding: 48px 64px 72px;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .slide.active { display: flex; }
+    h1 { font-size: 2.2rem; line-height: 1.25; margin: 0 0 16px; }
+    h2 { font-size: 1.8rem; margin: 0 0 24px; color: var(--accent); }
+    h3 { font-size: 1.2rem; margin: 18px 0 8px; color: var(--accent2); }
+    p, li { font-size: 1.15rem; line-height: 1.5; color: var(--text); }
+    .muted { color: var(--muted); }
+    .meta { font-size: 1rem; color: var(--muted); margin-bottom: 24px; }
+    ul { margin: 8px 0 0; padding-left: 1.2em; }
+    li { margin: 8px 0; }
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-right: 8px;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+    .big { font-size: 1.35rem; }
+    .footer {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 24px;
+      background: rgba(15, 23, 42, 0.9);
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .nav button {
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 6px 12px; cursor: pointer; margin-left: 8px;
+    }
+    .nav button:hover { border-color: var(--accent); }
+    .tag { color: var(--warn); font-weight: 600; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 1rem;
+      margin-top: 8px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left; padding: 10px 8px;
+    }
+    th { color: var(--accent); font-weight: 600; }
+    .center { text-align: center; }
+    @media (max-width: 800px) {
+      .slide { padding: 28px 20px 80px; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.3rem; }
+      .grid2 { grid-template-columns: 1fr; }
+      p, li { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <section class="slide active">
+      <div>
+        <span class="pill">НИС · Анализ данных и ИИ</span>
+        <span class="pill">NeurIPS 2023</span>
+      </div>
+      <h1>When Do Neural Nets Outperform Boosted Trees on Tabular Data?</h1>
+      <p class="meta">McElfresh, Khandagale, Valverde, Prasad, Feuer, Hegde, Ramakrishnan, Goldblum, White</p>
+      <p class="big muted">Крупнейший на момент публикации бенчмарк табличных данных: 19 алгоритмов × 176 датасетов</p>
+      <p class="muted">arxiv.org/abs/2305.02997 · github.com/naszilla/tabzilla</p>
+    </section>
+
+    <section class="slide">
+      <h2>Постановка задачи</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Проблема</h3>
+          <ul>
+            <li>Табличные данные — самые распространённые в практике ML.</li>
+            <li>В CV/NLP нейросети доминируют, а на таблицах спор <span class="tag">NN vs GBDT</span> не утихает.</li>
+            <li>Прошлые сравнения часто на &lt;50 датасетах и со слабым тюнингом baselines.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Почему важно</h3>
+          <ul>
+            <li>Практика: медицина, финансы, реклама, бизнес-аналитика.</li>
+            <li>Нужно понять не «кто всегда лучше», а <b>когда</b> какой метод уместен.</li>
+            <li>И есть ли смысл спорить о семействе моделей вообще.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Контекст и ограничения прошлых работ</h2>
+      <ul>
+        <li><b>За GBDT:</b> Grinsztajn et al., Borisov et al. — деревья устойчивее на «сырых» таблицах.</li>
+        <li><b>За NN:</b> FT-Transformer, SAINT, NODE, TabNet и др. — сильные результаты на отдельных бенчмарках.</li>
+        <li>Частый вывод сводился к среднему рангу «кто победил в среднем».</li>
+        <li>Ближайшая работа: Grinsztajn et al. — 7 алгоритмов, 45 датасетов, более контролируемый дизайн.</li>
+      </ul>
+      <p class="quote" style="margin-top:24px">Авторы этой статьи: масштаб + метафичи + вопрос о значимости самого спора NN vs GBDT.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Основная идея</h2>
+      <p class="big">Не искать универсального победителя, а ответить на два вопроса:</p>
+      <div class="grid2" style="margin-top:20px">
+        <div class="card">
+          <h3>1. Значимость выбора</h3>
+          <p>Насколько важен выбор семейства (NN vs GBDT) по сравнению с простым baseline и лёгким тюнингом?</p>
+        </div>
+        <div class="card">
+          <h3>2. Метафичи</h3>
+          <p>Какие свойства датасета предсказывают успех NN или GBDT?</p>
+        </div>
+      </div>
+      <p style="margin-top:24px">Плюс артефакт для сообщества: <b>TabZilla</b> — 36 «сложных» датасетов.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Экспериментальный дизайн статьи</h2>
+      <table>
+        <tr><th>Что</th><th>Как</th></tr>
+        <tr><td>Алгоритмы</td><td>19: CatBoost / XGBoost / LightGBM; ResNet, FT-Transformer, SAINT, TabPFN, …; RF, SVM, …</td></tr>
+        <tr><td>Данные</td><td>176 классификационных датасетов OpenML (в т.ч. CC-18)</td></tr>
+        <tr><td>Сплиты</td><td>10 фолдов OpenML + validation внутри train</td></tr>
+        <tr><td>Тюнинг</td><td>до 30 конфигураций (default + Optuna random search)</td></tr>
+        <tr><td>Метрики</td><td>accuracy (основная), log loss, F1, ROC AUC; нормализация ADTM</td></tr>
+        <tr><td>Метафичи</td><td>сотни признаков через PyMFE (стат., информационные, landmarking)</td></tr>
+      </table>
+    </section>
+
+    <section class="slide">
+      <h2>Ключевые результаты (1)</h2>
+      <ul>
+        <li><b>Нет доминирующего алгоритма:</b> почти каждый метод где-то 1-й и где-то последний.</li>
+        <li>Лучшие в среднем: <b>CatBoost</b> и <b>TabPFN*</b> (TabPFN на subsample ≤3000).</li>
+        <li>На малых датасетах (≤1250) TabPFN — лучший по среднему качеству и очень быстрый в обучении.</li>
+        <li>Venn: на многих датасетах «высококачественные» есть и у GBDT, и у NN, и у baselines.</li>
+      </ul>
+      <p class="quote" style="margin-top:20px">Спор «NN vs GBDT» переоценён: часто важнее baseline / лёгкий тюнинг.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Ключевые результаты (2)</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Тюнинг vs выбор семейства</h3>
+          <p>Примерно на <b>1/3 датасетов</b> прирост от лёгкого тюнинга CatBoost ≥ разнице между лучшим NN и лучшим GBDT на default.</p>
+        </div>
+        <div class="card">
+          <h3>Когда GBDT сильнее</h3>
+          <ul>
+            <li>Более крупные датасеты</li>
+            <li>Высокое отношение size / #features</li>
+            <li>«Нерегулярность»: skew, heavy tails, дисбаланс</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:20px"><b>Практический совет авторов:</b> сначала простые baselines → лёгкий тюнинг CatBoost → затем точечно NN/другие GBDT по метафичам.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Выводы и ограничения статьи</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Что подтверждается</h3>
+          <ul>
+            <li>Универсального победителя нет.</li>
+            <li>TabPFN силён на малых данных.</li>
+            <li>Нерегулярность и размер связаны с преимуществом GBDT.</li>
+            <li>Тюнинг часто важнее «философии» NN vs trees.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Ограничения</h3>
+          <ul>
+            <li>Только классификация (не регрессия).</li>
+            <li>Таймауты/память → не все методы на всех данных.</li>
+            <li>Корреляции метафич ≠ причинность.</li>
+            <li>TabPFN* — с subsample, не полный training set.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Наш эксперимент (ноутбук)</h2>
+      <p><b>Вопрос:</b> воспроизводится ли на малом наборе OpenML-датасетов тезис «на скошенных / сложных признаках GBDT ≥ MLP»?</p>
+      <ul>
+        <li><b>Модели:</b> Logistic Regression, Random Forest, MLP (sklearn), XGBoost, LightGBM.</li>
+        <li><b>Метрика:</b> ROC-AUC, 5-fold CV, seed=42.</li>
+        <li><b>Упрощения:</b> без CatBoost/TabPFN/ResNet; короткий тюнинг XGBoost vs default MLP.</li>
+      </ul>
+      <p class="muted" style="margin-top:16px">Ожидание: на irregular-наборах деревья впереди; тюнинг GBDT даёт заметный прирост.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Результаты нашего эксперимента</h2>
+      <table>
+        <tr><th>Датасет</th><th>skew</th><th>MLP</th><th>XGB</th><th>LGBM</th><th>Вывод</th></tr>
+        <tr><td>blood-transfusion</td><td>2.26</td><td>0.76</td><td>0.71</td><td>0.69</td><td>MLP ≈ / чуть лучше</td></tr>
+        <tr><td>diabetes</td><td>1.10</td><td>0.81</td><td>0.81</td><td>0.79</td><td>почти паритет; тюнинг XGB важен</td></tr>
+        <tr><td>credit-g</td><td>1.15</td><td>0.79</td><td>0.78</td><td>0.78</td><td>разница мала</td></tr>
+        <tr><td>pc4</td><td>6.48</td><td>0.88</td><td>0.95</td><td>0.95</td><td><b>GBDT заметно лучше</b></td></tr>
+        <tr><td>madelon</td><td>0.05*</td><td>0.59</td><td>0.85</td><td>0.90</td><td><b>GBDT >> MLP</b> (шумные признаки)</td></tr>
+      </table>
+      <p class="muted" style="margin-top:12px">*у madelon низкий skew, но много неинформативных признаков — другой вид «сложности» из статьи.</p>
+    </section>
+
+    <section class="slide center">
+      <h1>Спасибо!</h1>
+      <p class="big">Вопросы</p>
+      <p class="muted" style="margin-top:24px">Презентация + ноутбук: папка <code>nis_doklad/</code></p>
+      <p class="muted">Статья: arxiv.org/abs/2305.02997</p>
+    </section>
+  </div>
+
+  <div class="footer">
+    <div>НИС «Анализ данных и ИИ» · McElfresh et al., NeurIPS 2023</div>
+    <div class="nav">
+      <span id="counter">1 / 11</span>
+      <button type="button" id="prev">←</button>
+      <button type="button" id="next">→</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let i = 0;
+    const counter = document.getElementById('counter');
+    function show(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      counter.textContent = `${i + 1} / ${slides.length}`;
+    }
+    document.getElementById('prev').onclick = () => show(i - 1);
+    document.getElementById('next').onclick = () => show(i + 1);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') show(i + 1);
+      if (e.key === 'ArrowLeft') show(i - 1);
+    });
+  </script>
+</body>
+</html>
